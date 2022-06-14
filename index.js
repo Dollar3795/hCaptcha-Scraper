@@ -12,15 +12,7 @@ if (!fs.existsSync("./captchas")) fs.mkdirSync("./captchas");
     const context = await browser.newContext({"viewport": null});
     await context.addInitScript('Object.defineProperty(navigator, "webdriver", {"get": () => false})');
     const page = await context.newPage();
-    await page.goto("https://discord.com/register", {"waitUntil": "networkidle0"});
-    await page.type("[name='email']", Math.random().toString(36).substring(2) + "@outlook.com");
-    await page.type("[name='username']", Math.random().toString(36).substring(2));
-    await page.type("[name='password']", "qpwo12!@");
-    await page.type("[aria-label='Month']", "January");
-    await page.type("[aria-label='Day']", "1");
-    await page.type("[aria-label='Year']", "2000");
-
-    await page.click(".contents-3ca1mk");
+    await page.goto("https://accounts.hcaptcha.com/demo?sitekey=4c672d35-0701-42b2-88c3-78380b0db560", {"waitUntil": "networkidle0"});
 
     await page.route("**/*", function(route, request) {
         if (request.url().startsWith("https://imgs.hcaptcha.com/")) route.fulfill({"body": blankImage});
