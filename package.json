@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/Dollar3795/hCaptcha-Scraper#readme",
   "dependencies": {
+    "ghost-cursor": "^1.1.13",
     "node-fetch": "^3.2.4",
     "playwright": "^1.22.0",
     "unhomoglyph": "^1.0.6"
