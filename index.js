@@ -26,7 +26,7 @@ if (!fs.existsSync("captchas/unknown")) fs.mkdirSync("captchas/unknown");
     await page.goto("https://accounts.hcaptcha.com/demo?sitekey=4c672d35-0701-42b2-88c3-78380b0db560", {"waitUntil": "networkidle"});
 
     if (replaceImage) {
-            await page.route("**/*", function(route, request) {
+        await page.route("**/*", function(route, request) {
             if (request.url().startsWith("https://imgs.hcaptcha.com/")) return route.fulfill({"body": blankImage});
             return route.continue();
         });
