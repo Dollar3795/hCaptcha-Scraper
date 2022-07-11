@@ -95,11 +95,11 @@ if (!fs.existsSync("captchas/unknown")) fs.mkdirSync("captchas/unknown");
 
     for (const pos of path(cursorPos, {"x": captchaBB.x + randomInt(0, captchaBB.width), "y": captchaBB.y + randomInt(0, captchaBB.height)})) {
         await page.mouse.move(pos.x, pos.y);
-        await sleep(Math.random() * 10);
+        await sleep(Math.random() * 25);
     }
 
     while (true) {
-        await new Promise(resolve => setTimeout(resolve, refreshInterval * 1000));
+        await sleep(refreshInterval * 1000);
         await page.mouse.down();
         await sleep(Math.random() * 100);
         await page.mouse.up();
