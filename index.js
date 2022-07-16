@@ -51,14 +51,18 @@ if (!fs.existsSync("captchas/unknown")) fs.mkdirSync("captchas/unknown");
                         if (i > 8) {
                             if (taskQuestion === prediction.prediction) {
                                 if (!fs.existsSync("captchas/unflag/" + prediction.prediction)) fs.mkdirSync("captchas/unflag/" + prediction.prediction);
-                                fs.writeFileSync(`captchas/unflag/${prediction.prediction}/${crypto.randomUUID()}.jpg`, Buffer.from(await fetch(resp.requester_question_example[i - 9]).then(res => res.arrayBuffer())));
+                                const imageBuffer = Buffer.from(await fetch(resp.requester_question_example[i - 9]).then(res => res.arrayBuffer()));
+                                const imageHash = crypto.createHash("sha256").update(imageBuffer).digest("hex");
+                                fs.writeFileSync(`captchas/unflag/${prediction.prediction}/${imageHash}.jpg`, imageBuffer);
                                 console.log(`\x1b[1m\x1b[32m[+] Unflagged Image Saved | Question: ${taskQuestion} | Prediction: ${prediction.prediction} | Probability: ${prediction.probability}%\x1b[0m`);
                             }
                             else console.log(`\x1b[1m\x1b[31m[-] Image Failed | Question: ${taskQuestion} | Prediction: ${prediction.prediction} | Probability: ${prediction.probability}%\x1b[0m`);
                         }
                         else {
                             if (!fs.existsSync("captchas/flag/" + prediction.prediction)) fs.mkdirSync("captchas/flag/" + prediction.prediction);
-                            fs.writeFileSync(`captchas/flag/${prediction.prediction}/${crypto.randomUUID()}.jpg`, Buffer.from(await fetch(resp.tasklist[i].datapoint_uri).then(res => res.arrayBuffer())));
+                            const imageBuffer = Buffer.from(await fetch(resp.tasklist[i].datapoint_uri).then(res => res.arrayBuffer()));
+                            const imageHash = crypto.createHash("sha256").update(imageBuffer).digest("hex");
+                            fs.writeFileSync(`captchas/flag/${prediction.prediction}/${imageHash}.jpg`, imageBuffer);
                             console.log(`\x1b[1m\x1b[32m[+] Flagged Image Saved | Question: ${taskQuestion} | Prediction: ${prediction.prediction} | Probability: ${prediction.probability}%\x1b[0m`);
                         }
                     }
@@ -66,11 +70,11 @@ if (!fs.existsSync("captchas/unknown")) fs.mkdirSync("captchas/unknown");
                 }
             }
             else {
-                for (var i = 0; i < resp.tasklist.length; i++) {
-                    const task = resp.tasklist[i];
-                    const imageBuffer = Buffer.from(await fetch(task.datapoint_uri).then(res => res.arrayBuffer()));
+                for (const task of resp.tasklist) {
                     if (!fs.existsSync("captchas/unknown/" + taskQuestion)) fs.mkdirSync("captchas/unknown/" + taskQuestion);
-                    fs.writeFileSync(`captchas/unknown/${taskQuestion}/${crypto.randomUUID()}.jpg`, imageBuffer);
+                    const imageBuffer = Buffer.from(await fetch(task.datapoint_uri).then(res => res.arrayBuffer()));
+                    const imageHash = crypto.createHash("sha256").update(imageBuffer).digest("hex");
+                    fs.writeFileSync(`captchas/unknown/${taskQuestion}/${imageHash}.jpg`, imageBuffer);
                     console.log(`\x1b[1m\x1b[32m[+] Unknown Image Saved | Question: ${taskQuestion}\x1b[0m`);
                 }
             }
